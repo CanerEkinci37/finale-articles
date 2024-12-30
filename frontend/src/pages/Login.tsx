@@ -10,14 +10,16 @@ import {
   Alert,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/appSelector';
-import { login } from '../redux/slices/authSlice';
+import { login } from '../redux/authSlice';
+import { UserLogin, UserState } from '../types/User';
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
-  
-  const [formData, setFormData] = useState({
+  const { isLoading, error } = useAppSelector<UserState>((state) => state.auth);
+
+
+  const [formData, setFormData] = useState<UserLogin>({
     username: '',
     password: '',
   });
@@ -65,10 +67,10 @@ const Login = () => {
             fullWidth
             variant="contained"
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             sx={{ mt: 2 }}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Logging in...' : 'Login'}
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">

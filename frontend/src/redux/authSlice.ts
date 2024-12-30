@@ -1,45 +1,45 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authApi } from '../../api/auth';
-import { AuthState, LoginCredentials, RegisterCredentials } from '../../types/Auth';
+import { authApi } from '../api/auth';
+import { UserState, UserLogin, UserCreate } from '../types/User';
 
-const initialState: AuthState = {
+const initialState: UserState = {
   user: null,
   token: localStorage.getItem('token'),
   isAuthenticated: !!localStorage.getItem('token'),
-  loading: false,
+  isLoading: false,
   error: null,
 };
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: LoginCredentials) => {
-    const response = await authApi.login(credentials);
+  async (userLogin: UserLogin) => {
+    const response = await authApi.login(userLogin);
     return response;
   }
 );
 
-export const register = createAsyncThunk(
-  'auth/register',
-  async (credentials: RegisterCredentials) => {
-    const response = await authApi.register(credentials);
+export const signup = createAsyncThunk(
+  'auth/signup',
+  async (userCreate: UserCreate) => {
+    const response = await authApi.signup(userCreate);
     return response;
   }
 );
 
-export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
-  async () => {
-    const response = await authApi.getCurrentUser();
-    return response.user;
-  }
-);
+
+// export const getCurrentUser = createAsyncThunk(
+//   'auth/getCurrentUser',
+//   async () => {
+//     const response = await authApi.getCurrentUser();
+//     return response.user;
+//   }
+// );
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null;
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem('token');
@@ -49,23 +49,19 @@ const authSlice = createSlice({
     builder
       // Login
       .addCase(login.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.isAuthenticated = true;
         state.token = action.payload.access_token;
         localStorage.setItem('token', action.payload.access_token);
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.error = action.error.message || 'Login failed';
       })
-      // Get Current User
-      .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-      });
   },
 });
 

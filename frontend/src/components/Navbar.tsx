@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,14 +8,35 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAppDispatch, useAppSelector } from '../hooks/appSelector';
-import { logout } from '../redux/slices/authSlice';
+import { logout } from '../redux/authSlice';
+import { meApi } from '../api/me';
+import { UserRead } from '../types/User';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const [currentUser, setCurrentUser] = useState<UserRead | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isAuthenticated) {
+        try {
+          const user = await meApi.getMe();
+          setCurrentUser(user);
+        } catch (error) {
+          console.error('Failed to fetch user:', error);
+        }
+      } else {
+        setCurrentUser(null);
+      }
+    };
+
+    fetchUser();
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
+    setCurrentUser(null);
     dispatch(logout());
     navigate('/login');
   };
@@ -38,9 +60,9 @@ export default function Navbar() {
           {isAuthenticated ? (
             <>
               <Typography sx={{ mr: 2 }}>
-                Welcome, {user?.username}
+                Welcome, {currentUser?.username}
               </Typography>
-              <Button color="inherit" onClick={() => navigate('/profile')}>
+              <Button color="inherit" onClick={() => navigate('/me')}>
                 Profile
               </Button>
               <Button color="inherit" onClick={handleLogout}>

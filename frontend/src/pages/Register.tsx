@@ -10,15 +10,17 @@ import {
   Alert,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/appSelector';
-import { register } from '../redux/slices/authSlice';
+import { signup } from '../redux/authSlice';
+import { UserCreate, UserSignup, UserState } from '../types/User';
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { isLoading, error } = useAppSelector<UserState>((state) => state.auth);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserSignup>({
     username: '',
+    email: '',
     password: '',
     confirmPassword: '',
   });
@@ -40,9 +42,15 @@ const Register = () => {
     }
 
     try {
-      const { confirmPassword, ...registerData } = formData;
-      await dispatch(register(registerData)).unwrap();
-      navigate('/');
+      const { confirmPassword, ...signUpData } = formData;
+      // convert to userCreate
+      const userCreate: UserCreate = {
+        username: signUpData.username,
+        email: signUpData.email,
+        password: signUpData.password,
+      }
+      await dispatch(signup(userCreate)).unwrap();
+      navigate('/login');
     } catch (error) {
       console.error('Registration failed:', error);
     }
@@ -72,6 +80,16 @@ const Register = () => {
           />
           <TextField
             fullWidth
+            label="Email"
+            margin="normal"
+            required
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+          />
+          <TextField
+            fullWidth
             type="password"
             label="Password"
             margin="normal"
@@ -96,10 +114,10 @@ const Register = () => {
             fullWidth
             variant="contained"
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             sx={{ mt: 2 }}
           >
-            {loading ? 'Registering...' : 'Register'}
+            {isLoading ? 'Registering...' : 'Register'}
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">
