@@ -5,10 +5,7 @@ import { Token } from '../types/Token';
 
 export const authApi = {
   login: async (userLogin: UserLogin): Promise<Token> => {
-    const formData = qs.stringify({
-      username: userLogin.username,
-      password: userLogin.password,
-    });
+    const formData = qs.stringify(userLogin);
 
     const response = await api.post<Token>('auth/login', formData);
     return response.data;
