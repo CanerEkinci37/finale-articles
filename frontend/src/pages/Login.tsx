@@ -9,17 +9,15 @@ import {
   Box,
   Alert,
 } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../hooks/appSelector';
-import { login } from '../redux/authSlice';
-import { UserLogin, UserState } from '../types/User';
+import { UserLogin } from '../types/User';
+import { authApi } from '../api/auth';
 
 const Login = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isLoading, error } = useAppSelector<UserState>((state) => state.auth);
 
+  const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<UserLogin>({
+  const [userLoginData, setUserLoginData] = useState<UserLogin>({
     username: '',
     password: '',
   });
@@ -27,10 +25,12 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(login(formData)).unwrap();
+      const response =await authApi.login(userLoginData)
+      localStorage.setItem('token', response.access_token)
       navigate('/');
-    } catch (error) {
-      console.error('Login failed:', error);
+    }catch (error) {
+      setError('Invalid username or password')
+      console.error('Login failed:', error)
     }
   };
 
@@ -47,9 +47,9 @@ const Login = () => {
             label="Username"
             margin="normal"
             required
-            value={formData.username}
+            value={userLoginData.username}
             onChange={(e) =>
-              setFormData({ ...formData, username: e.target.value })
+              setUserLoginData({ ...userLoginData, username: e.target.value })
             }
           />
           <TextField
@@ -58,19 +58,18 @@ const Login = () => {
             label="Password"
             margin="normal"
             required
-            value={formData.password}
+            value={userLoginData.password}
             onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
+              setUserLoginData({ ...userLoginData, password: e.target.value })
             }
           />
           <Button
             fullWidth
             variant="contained"
             type="submit"
-            disabled={isLoading}
             sx={{ mt: 2 }}
           >
-            {isLoading ? 'Logging in...' : 'Login'}
+            Login
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">
