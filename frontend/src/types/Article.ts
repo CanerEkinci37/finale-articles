@@ -1,19 +1,10 @@
-export interface Article {
-    id: number;
-    title: string;
-    content: string;
-    author_id: number;
-    created_at: string;
-    updated_at: string;
-  }
-  
-export interface CreateArticleDto {
-title: string;
-content: string;
-}
+import { UserRead } from "./User";
 
-export interface UpdateArticleDto {
-title?: string;
-content?: string;
+export interface ArticleRead {
+  id: string;
+  title: string;
+  content: string;
+  author: UserRead;
+  created_at: Date;
+  updated_at: Date;
 }
-
