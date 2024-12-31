@@ -1,8 +1,13 @@
 export interface User {
-    id: string;
-    username: string;
-    email: string;
-  }
+  id: string;
+  username: string;
+  email: string;
+  hashed_password: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface UserCreate {
   username: string;
@@ -14,12 +19,14 @@ export interface UserRead {
   id: string;
   username: string;
   email: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface UserUpdate {
-  username: string;
-  email: string;
-  password: string;
+  username?: string;
+  email?: string;
+  password?: string;
 }
 
 export interface UserLogin {
@@ -27,17 +34,12 @@ export interface UserLogin {
   password: string;
 }
 
-export interface UserSignup {
+export interface UserSignUp {
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-export interface UserState {
-  user: UserRead | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  token: string | null;
-}
+
+
