@@ -12,10 +12,16 @@ import {
   IconButton,
   Alert,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { meApi } from "../api/me";
 import { UserRead, UserUpdate } from "../types/User";
 import Navbar from "../components/Navbar";
@@ -27,10 +33,11 @@ const Me = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userUpdateData, setUserUpdateData] = useState<Partial<UserUpdate>>({
-    username: '',
-    email: '',
-    password: ''
+    username: "",
+    email: "",
+    password: "",
   });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -43,7 +50,7 @@ const Me = () => {
       setUserUpdateData({
         username: currentUser.username,
         email: currentUser.email,
-        password: ''
+        password: "",
       });
     } catch (err: any) {
       setError(err.response?.data?.detail || "Failed to fetch user data");
@@ -71,7 +78,17 @@ const Me = () => {
       navigate("/");
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || "Failed to update profile";
-      setError(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
+      setError(typeof errorMessage === "string" ? errorMessage : JSON.stringify(errorMessage));
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setError(null);
+      await meApi.deleleMe();
+      navigate("/login");
+    } catch (err: any) {
+      setError(err.response?.data?.detail || "Failed to delete account");
     }
   };
 
@@ -229,6 +246,15 @@ const Me = () => {
                         { month: "long", day: "numeric", year: "numeric" }
                       )}
                     </Typography>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      startIcon={<DeleteIcon />}
+                      sx={{ mt: 2 }}
+                      onClick={() => setDeleteDialogOpen(true)}
+                    >
+                      Delete Account
+                    </Button>
                   </Box>
                 )}
               </Box>
@@ -236,6 +262,34 @@ const Me = () => {
           </Grid>
         </Paper>
       </Container>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Account Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete your account? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteAccount}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

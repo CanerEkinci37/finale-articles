@@ -14,10 +14,11 @@ import { authApi } from "../api/auth";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   const [userFormData, setUserFormData] = useState<UserSignUp>({
     username: "",
-    email: "",
+    email: "",  
     password: "",
     confirmPassword: "",
   });
@@ -33,11 +34,6 @@ const SignUp = () => {
       return;
     }
 
-    if (userFormData.password.length < 6) {
-      setValidationError("Password must be at least 6 characters long");
-      return;
-    }
-
     try {
       const { confirmPassword, ...signUpData } = userFormData;
       // convert to userCreate
@@ -50,8 +46,9 @@ const SignUp = () => {
       const response = await authApi.signup(userCreate);
       console.log(response);
       navigate("/login");
-    } catch (error) {
-      console.error("Registration failed:", error);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || "Failed to sign up";
+      setError(typeof errorMessage === "string" ? errorMessage : JSON.stringify(errorMessage));
     }
   };
 
@@ -61,6 +58,11 @@ const SignUp = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Register
         </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         {validationError && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {validationError}
