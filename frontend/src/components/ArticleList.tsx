@@ -19,6 +19,8 @@ const ArticleList = ({articles, loading}: {articles: ArticleRead[], loading: boo
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<UserRead | null>(null);
 
+  console.log(currentUser)
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const user = await meApi.getMe();
