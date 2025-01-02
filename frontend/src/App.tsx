@@ -6,6 +6,10 @@ import { UserRead } from './types/User';
 import Me from './pages/Me';
 import { useEffect, useState } from 'react';
 import { meApi } from './api/me';
+import MyArticles from './pages/MyArticles';
+import ArticleDetail from './pages/ArticleDetail';
+import CreateArticle from './pages/CreateArticle';
+import UserProfile from './pages/UserProfile';
 
 interface ProtectedRouteProps {
   children: JSX.Element;
@@ -29,7 +33,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         setCurrentUser(user);
       } catch (error) {
         console.error('Failed to fetch user:', error);
-        localStorage.removeItem('token'); // Token geçersizse sil
+        localStorage.removeItem('token');
         setCurrentUser(null);
       } finally {
         setLoading(false);
@@ -69,6 +73,38 @@ function App() {
           element={
             <ProtectedRoute>
               <Me />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/my-articles" 
+          element={
+            <ProtectedRoute>
+              <MyArticles />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/articles/:id" 
+          element={
+            <ProtectedRoute>
+              <ArticleDetail />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/create-article" 
+          element={
+            <ProtectedRoute>
+              <CreateArticle />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/users/:id" 
+          element={
+            <ProtectedRoute>
+              <UserProfile />
             </ProtectedRoute>
           } 
         />
