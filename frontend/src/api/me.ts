@@ -6,7 +6,6 @@ export const meApi = {
     const response = await api.get<UserRead>("/me");
     return response.data;
   },
-
   updateMe: async (userUpdate: Partial<UserUpdate>): Promise<UserRead> => {
     const response = await api.patch<UserRead>("/me", userUpdate, {
       headers: {
@@ -15,4 +14,8 @@ export const meApi = {
     });
     return response.data;
   },
+  deleleMe: async (): Promise<UserRead> => {
+    const response = await api.delete<UserRead>("/me")
+    return response.data;
+  }
 };
