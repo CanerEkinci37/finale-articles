@@ -44,7 +44,9 @@ class User(TimeStampedModel, UserBase, table=True):
     is_active: bool = True
     is_superuser: bool = False
     # Relationships
-    articles: List["Article"] = Relationship(back_populates="author")
+    articles: List["Article"] = Relationship(
+        back_populates="author", cascade_delete=True
+    )
 
 
 # Article Models
