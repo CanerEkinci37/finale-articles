@@ -94,7 +94,7 @@ def get_articles(
     *,
     session: Session,
 ):
-    db_obj = session.exec(select(Article)).all()
+    db_obj = session.exec(select(Article).order_by(Article.created_at.desc())).all()
     return db_obj
 
 
