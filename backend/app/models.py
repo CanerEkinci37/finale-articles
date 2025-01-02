@@ -62,6 +62,8 @@ class ArticleCreate(ArticleBase):
 class ArticleRead(ArticleBase):
     id: uuid.UUID | None = None
     author: UserRead | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class ArticleUpdate(SQLModel):
