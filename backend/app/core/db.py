@@ -4,9 +4,7 @@ from .. import crud
 from ..models import User, UserCreate
 from .config import settings
 
-engine = create_engine(
-    str(settings.DATABASE_URL), connect_args={"check_same_thread": False}
-)
+engine = create_engine(settings.DATABASE_URL)
 
 
 def init_db(session: Session) -> None:

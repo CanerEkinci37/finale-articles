@@ -1,4 +1,3 @@
-import os
 import secrets
 
 from dotenv import load_dotenv
@@ -19,7 +18,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 30
 
     # Database
-    DATABASE_URL: str = "sqlite:///./articles.db"
+    DATABASE_URL: str
 
     # CORS
     BACKEND_CORS_ORIGINS: list[str] = ["http://localhost:3000"]  # Frontend URL
@@ -34,9 +33,9 @@ class Settings(BaseSettings):
     # EMAILS_FROM_NAME: str | None = None
 
     # First Superuser (get from env)
-    FIRST_SUPERUSER_USERNAME: str = os.getenv("FIRST_SUPERUSER_USERNAME")
-    FIRST_SUPERUSER_EMAIL: str = os.getenv("FIRST_SUPERUSER_EMAIL")
-    FIRST_SUPERUSER_PASSWORD: str = os.getenv("FIRST_SUPERUSER_PASSWORD")
+    FIRST_SUPERUSER_USERNAME: str
+    FIRST_SUPERUSER_EMAIL: str
+    FIRST_SUPERUSER_PASSWORD: str
 
     class Config:
         case_sensitive = True
