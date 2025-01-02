@@ -10,28 +10,23 @@ import {
   Skeleton,
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
-import { articlesApi } from '../api/articles';
 import { ArticleRead } from '../types/Article';
+import { meApi } from '../api/me';
+import { UserRead } from '../types/User';
+import { useNavigate } from 'react-router-dom';
 
-const ArticleList = () => {
-  const [articles, setArticles] = useState<ArticleRead[]>([]);
-  const [loading, setLoading] = useState(true);
+const ArticleList = ({articles, loading}: {articles: ArticleRead[], loading: boolean}) => {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<UserRead | null>(null);
 
   useEffect(() => {
-    fetchArticles();
+    const fetchCurrentUser = async () => {
+      const user = await meApi.getMe();
+      setCurrentUser(user);
+    };
+    fetchCurrentUser();
   }, []);
 
-  const fetchArticles = async () => {
-    try {
-      setLoading(true);
-      const articles = await articlesApi.getAll();
-      setArticles(articles);
-    } catch (error) {
-      console.error('Failed to fetch articles:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const isEdited = (article: ArticleRead) => {
     return new Date(article.updated_at).getTime() > new Date(article.created_at).getTime();
@@ -56,11 +51,13 @@ const ArticleList = () => {
               <Grid item xs={12} key={article.id}>
                 <Card 
                   sx={{ 
+                    cursor: 'pointer',
                     '&:hover': {
                       boxShadow: 6,
                       transition: 'box-shadow 0.3s ease-in-out'
                     }
                   }}
+                  onClick={() => navigate(`/articles/${article.id}`)}
                 >
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -92,7 +89,18 @@ const ArticleList = () => {
                       {article.content}
                     </Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography 
+                        variant="body2" 
+                        color="primary"
+                        sx={{ 
+                          cursor: 'pointer',
+                          '&:hover': { textDecoration: 'underline' }
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/users/${article.author.id}`);
+                        }}
+                      >
                         Yazar: {article.author.username}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
