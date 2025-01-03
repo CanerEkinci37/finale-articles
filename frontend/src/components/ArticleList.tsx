@@ -69,7 +69,7 @@ const ArticleList = ({articles, loading}: {articles: ArticleRead[], loading: boo
                       {isEdited(article) && (
                         <Chip
                           icon={<EditIcon />}
-                          label="Düzenlendi"
+                          label="Edited"
                           size="small"
                           color="primary"
                           variant="outlined"
