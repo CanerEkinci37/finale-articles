@@ -26,9 +26,11 @@ const CreateArticle = () => {
     try {
       await articlesApi.createArticle(articleData);
       navigate("/");
-    } catch (err) {
-      setError("Failed to create article");
-      console.error(err);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || "Failed to create article";
+      setError(typeof errorMessage === "string" 
+        ? errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1) 
+        : errorMessage[0].loc[1].charAt(0).toUpperCase() + errorMessage[0].loc[1].slice(1) + ' ' + errorMessage[0].msg);
     }
   };
 

@@ -78,7 +78,9 @@ const Me = () => {
       navigate("/");
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || "Failed to update profile";
-      setError(typeof errorMessage === "string" ? errorMessage : JSON.stringify(errorMessage));
+      setError(typeof errorMessage === "string" 
+        ? errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1) 
+        : errorMessage[0].loc[1].charAt(0).toUpperCase() + errorMessage[0].loc[1].slice(1) + ' ' + errorMessage[0].msg);
     }
   };
 

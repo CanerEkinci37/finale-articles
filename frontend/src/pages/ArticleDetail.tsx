@@ -71,9 +71,11 @@ console.log(article)
       const updatedArticle = await articlesApi.updateArticle(id, editData);
       setArticle(updatedArticle);
       setEditMode(false);
-    } catch (err) {
-      setError("Failed to update article");
-      console.error(err);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || "Failed to update article";
+      setError(typeof errorMessage === "string" 
+        ? errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1) 
+        : errorMessage[0].loc[1].charAt(0).toUpperCase() + errorMessage[0].loc[1].slice(1) + ' ' + errorMessage[0].msg);
     }
   };
 

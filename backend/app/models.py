@@ -34,8 +34,8 @@ class UserRead(UserBase):
 
 class UserUpdate(SQLModel):
     email: EmailStr | None = None
-    username: str | None = None
-    password: str | None = None
+    username: str | None = Field(None, min_length=5, max_length=20)
+    password: str | None = Field(None, min_length=8, max_length=40)
 
 
 class User(TimeStampedModel, UserBase, table=True):
@@ -53,8 +53,8 @@ class User(TimeStampedModel, UserBase, table=True):
 
 
 class ArticleBase(SQLModel):
-    title: str = Field(index=True)
-    content: str = Field(index=True)
+    title: str = Field(index=True, min_length=5, max_length=100)
+    content: str = Field(index=True, min_length=20, max_length=5000)
 
 
 class ArticleCreate(ArticleBase):
@@ -69,8 +69,8 @@ class ArticleRead(ArticleBase):
 
 
 class ArticleUpdate(SQLModel):
-    title: str | None = None
-    content: str | None = None
+    title: str | None = Field(None, min_length=5, max_length=100)
+    content: str | None = Field(None, min_length=20, max_length=5000)
 
 
 class Article(TimeStampedModel, ArticleBase, table=True):

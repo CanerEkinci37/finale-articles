@@ -18,7 +18,7 @@ const SignUp = () => {
 
   const [userFormData, setUserFormData] = useState<UserSignUp>({
     username: "",
-    email: "",  
+    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -48,7 +48,10 @@ const SignUp = () => {
       navigate("/login");
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || "Failed to sign up";
-      setError(typeof errorMessage === "string" ? errorMessage : JSON.stringify(errorMessage));
+      setError(typeof errorMessage === "string" 
+        ? errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1) 
+        : errorMessage[0].loc[1].charAt(0).toUpperCase() + errorMessage[0].loc[1].slice(1) + ' ' + errorMessage[0].msg);
+    
     }
   };
 
