@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
 
     # CORS
-    BACKEND_CORS_ORIGINS: list[str] = ["http://localhost:3000"]  # Frontend URL
+    BACKEND_CORS_ORIGINS: list[str]
 
     # Email Settings (for future use)
     # SMTP_TLS: bool = True

@@ -4,14 +4,14 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - "22572:80"
     depends_on:
       - backend
 
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "22570:8000"
     env_file:
       - .env
     environment:
@@ -19,12 +19,14 @@ services:
       - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD}
       - FIRST_SUPERUSER_EMAIL=${FIRST_SUPERUSER_EMAIL}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: always
 
   db:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "22571:3306"
     env_file:
       - .env
     environment:
@@ -34,6 +36,11 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mysql_data: 
