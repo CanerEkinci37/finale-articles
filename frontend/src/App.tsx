@@ -32,7 +32,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         const user = await meApi.getMe();
         setCurrentUser(user);
       } catch (error) {
-        console.error('Failed to fetch user:', error);
         localStorage.removeItem('token');
         setCurrentUser(null);
       } finally {

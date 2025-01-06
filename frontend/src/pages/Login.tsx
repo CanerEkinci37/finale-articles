@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Container,
@@ -15,6 +15,12 @@ import { authApi } from '../api/auth';
 const Login = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate('/');
+    }
+  }, [])
+
   const [error, setError] = useState<string | null>(null);
 
   const [userLoginData, setUserLoginData] = useState<UserLogin>({
@@ -25,10 +31,10 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response =await authApi.login(userLoginData)
+      const response = await authApi.login(userLoginData)
       localStorage.setItem('token', response.access_token)
       navigate('/');
-    }catch (error) {
+    } catch (error) {
       setError('Invalid username or password')
       console.error('Login failed:', error)
     }

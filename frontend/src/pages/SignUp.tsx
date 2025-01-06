@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Container,
@@ -14,6 +14,13 @@ import { authApi } from "../api/auth";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+      if (localStorage.getItem('token')) {
+        navigate('/');
+      }
+    }, [])
+
   const [error, setError] = useState<string | null>(null);
 
   const [userFormData, setUserFormData] = useState<UserSignUp>({
