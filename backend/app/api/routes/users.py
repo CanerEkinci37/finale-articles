@@ -1,10 +1,9 @@
 import uuid
 
 from fastapi import APIRouter, HTTPException, status
-from sqlmodel import select
 
 from ... import crud
-from ...models import User, UserRead, UserUpdate
+from ...models import UserRead
 from ..deps import CurrentUser, SessionDep
 
 router = APIRouter()

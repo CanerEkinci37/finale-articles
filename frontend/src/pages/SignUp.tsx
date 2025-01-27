@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Container,
@@ -14,18 +14,11 @@ import { authApi } from "../api/auth";
 
 const SignUp = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-      if (localStorage.getItem('token')) {
-        navigate('/');
-      }
-    }, [])
-
   const [error, setError] = useState<string | null>(null);
 
   const [userFormData, setUserFormData] = useState<UserSignUp>({
     username: "",
-    email: "",
+    email: "",  
     password: "",
     confirmPassword: "",
   });
@@ -55,10 +48,8 @@ const SignUp = () => {
       navigate("/login");
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || "Failed to sign up";
-      setError(typeof errorMessage === "string" 
-        ? errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1) 
-        : errorMessage[0].loc[1].charAt(0).toUpperCase() + errorMessage[0].loc[1].slice(1) + ' ' + errorMessage[0].msg);
-    
+      console.log(errorMessage)
+      setError(typeof errorMessage === "string" ? errorMessage : JSON.stringify(errorMessage));
     }
   };
 

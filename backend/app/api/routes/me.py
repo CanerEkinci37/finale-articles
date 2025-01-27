@@ -37,4 +37,5 @@ def edit_me(*, session: SessionDep, current_user: CurrentUser, user_update: User
 
 @router.delete("/", response_model=UserRead)
 def delete_me(*, session: SessionDep, current_user: CurrentUser):
+
     return crud.delete_user(session=session, db_user=current_user)
